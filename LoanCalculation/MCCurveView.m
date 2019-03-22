@@ -33,7 +33,7 @@
 @property (nonatomic,assign)NSInteger oldIndex;
 @end
 @implementation MCCurveView
--(NSArray *)dataArr{
+- (NSArray *)dataArr {
     if (!_dataArr) {
         _dataArr=[NSArray array];
     }
@@ -41,8 +41,7 @@
 }
 
 
-- (NSInteger)yUnitCount
-{
+- (NSInteger)yUnitCount {
     switch (self.type) {
         case 0:  //一周
             return 3;
@@ -57,9 +56,9 @@
             break;
         case 3:   //一年
             return 6;
-         case 4:  //创建以来
-           
-
+        case 4:  //创建以来
+            
+            
             return 6;
         default:
             return 4;
@@ -68,27 +67,23 @@
     return 4;
 }
 
--(float)unitValue{
+- (float)unitValue {
     
-    return (self.maxValue - self.minValue)/self.yUnitCount;
+    return (self.maxValue - self.minValue) / self.yUnitCount;
 }
 
 
-- (MCMarkLineView *)markLine
-{
+- (MCMarkLineView *)markLine {
     if (!_markLine) {
         _markLine = [[MCMarkLineView  alloc] initWithFrame:CGRectMake(0,0, self.width, self.height )];
         _markLine.type = DoubleLine;
-        
         _markLine.backgroundColor = [UIColor clearColor];
         _markLine.hidden = YES;
-        
     }
     return _markLine;
 }
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = UIColorFromRGB(0x121317);
@@ -96,8 +91,6 @@
         [self addGestureRecognizer:longPress];
         longPress.minimumPressDuration = 0.08;
         [self addSubview:self.markLine];
-        
-        
     }
     return self;
 }
@@ -115,24 +108,19 @@
     }
     
     CGFloat width = self.frame.size.width;
-
     NSInteger count = self.dataArr.count;
-    
     if (UIGestureRecognizerStateBegan == longPress.state) {
         NSInteger index = (NSInteger)(location.x - kLineBeginMarginLeft) * (count - 1)/(width - kLineBeginMarginLeft - kLineEndMarginRight);
         if (index >= self.dataArr.count) {
             index = self.dataArr.count - 1;
         }
-        CGFloat xx = index*(width - kLineBeginMarginLeft - kLineEndMarginRight)/(count-1) + kLineBeginMarginLeft;
+        CGFloat xx = index * (width - kLineBeginMarginLeft - kLineEndMarginRight) / (count - 1) + kLineBeginMarginLeft;
         CGFloat currenLoc = (location.x - kLineBeginMarginLeft) - xx;
         CGFloat rate = currenLoc * (count - 1)/(width - kLineBeginMarginLeft - kLineEndMarginRight);
-        
         NSInteger selectIndex = index;
         if (rate > 0.5) {
             selectIndex = index + 1;
         }
-        
-        
         MCReturnRate *returnRete = self.dataArr[selectIndex];
         CGFloat returnY = [self convertY:[self returnY:returnRete.returnRate]];
         CGFloat refReturnY = [self convertY:[self returnY:returnRete.refReturnRate]];
@@ -142,9 +130,8 @@
         _markLine.hidden = NO;
         _oldIndex = index;
         
-    }else if(UIGestureRecognizerStateChanged == longPress.state ){
+    } else if (UIGestureRecognizerStateChanged == longPress.state ) {
         //相对于屏幕的位置
-        
         NSInteger index = (location.x - kLineBeginMarginLeft ) * (count - 1)/(width - kLineBeginMarginLeft - kLineEndMarginRight);
         if (index != _oldIndex) { //不能长按移动一点点就重新绘图  要让定位的点改变了再重新绘图
             if (index >= count) {
@@ -154,49 +141,39 @@
             MCReturnRate *returnRete = self.dataArr[index];
             CGFloat returnY = [self convertY:[self returnY:returnRete.returnRate]];
             CGFloat refReturnY = [self convertY:[self returnY:returnRete.refReturnRate]];
-            CGFloat x = kLineBeginMarginLeft + (index)*(width - kLineBeginMarginLeft - kLineEndMarginRight)/(count-1) ;
+            CGFloat x = kLineBeginMarginLeft + (index)*(width - kLineBeginMarginLeft - kLineEndMarginRight) / (count-1) ;
             [self.markLine setX:x withReturnY:returnY refReturnY:refReturnY];
             _markLine.returnRate = returnRete;
             _markLine.hidden = NO;
             _oldIndex = index;
-            
         }
-    
     }
-    
 }
 
 
-- (void)markViewDisappear
-{
+- (void)markViewDisappear {
     _markLine.hidden = YES;
     _oldIndex = -1;//kLineBeginMarginLeft;
 }
-
-
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
     if (self.dataArr.count == 0) {
-//        CGContextRef context=UIGraphicsGetCurrentContext();
-//        CGContextClearRect(context, rect);
-
+        //        CGContextRef context=UIGraphicsGetCurrentContext();
+        //        CGContextClearRect(context, rect);
         [self drawString:@"暂无可显示的数据" inReact:CGRectMake(self.width/2.0 - 45,(self.bounds.size.height - 40)/2.0 ,200,40) fontSize:14 color:[UIColor colorWithWhite:1.0 alpha:0.3]];
-        
         return;
-    }else if(self.dataArr.count == 1){
+    } else if (self.dataArr.count == 1) {
         id obj = self.dataArr.firstObject;
         self.dataArr = @[obj,obj];
     }
     // 取出最大值 最小值
     CGContextRef context=UIGraphicsGetCurrentContext();
-//    CGContextClearRect(context, rect);
+    //    CGContextClearRect(context, rect);
     
-
-//     绘制当前路径区域
-
+    //     绘制当前路径区域
     [self configureDrawFrameWithRect:rect];
     [self drawCoodinateContext:context];
     [self drawHuShenLine:rect];
@@ -209,18 +186,18 @@
         _markLine.titleArr = @[@"房价",@"钱",@"月后买入"];
         str1 = @"房价";
         str2 = @"钱数";
-    }else if(_type == 3) {
-         _markLine.titleArr = @[@"等本息",@"等本金"];
-    }else if(_type == 5) {
+    } else if (_type == 3) {
+        _markLine.titleArr = @[@"等本息",@"等本金"];
+    } else if (_type == 5) {
         _markLine.titleArr = @[@"房价",@"钱",@"年总还款"];
-    }else if(_type == 7) {
+    } else if (_type == 7) {
         str1 = @"等本息月还款";
         str2 = @"月入利息";
         _markLine.titleArr = @[@"月还款",@"月入利息",@"元首付"];
-    }else if(_type == 6) {
+    } else if (_type == 6) {
         _markLine.titleArr = @[@"等本息",@"等本金",@"元首付"];
         
-    }else if(_type == 8) {
+    } else if (_type == 8) {
         str1 = @"等本进月均款";
         str2 = @"月入利息";
         _markLine.titleArr = @[@"月还款",@"月入利息",@"元首付"];
@@ -231,8 +208,7 @@
 }
 
 
-- (void)drawCoordinateLinesBeginPoint:(CGPoint)bPoint endPoint:(CGPoint)ePoint
-{
+- (void)drawCoordinateLinesBeginPoint:(CGPoint)bPoint endPoint:(CGPoint)ePoint {
     CGContextRef currentContext = UIGraphicsGetCurrentContext();
     //设置虚线颜色
     CGContextSetStrokeColorWithColor(currentContext,  [UIColor colorWithWhite:1 alpha:0.1].CGColor);
@@ -253,17 +229,15 @@
     
 }
 //画字符
--(void)drawString:(NSString *)str inReact:(CGRect)rect{
+- (void)drawString:(NSString *)str inReact:(CGRect)rect {
     [self drawString:str inReact:rect fontSize:8];
 }
-- (void)drawString:(NSString *)str inReact:(CGRect)rect fontSize:(CGFloat)fontSize
-{
+- (void)drawString:(NSString *)str inReact:(CGRect)rect fontSize:(CGFloat)fontSize {
     [self drawString:str inReact:rect fontSize:fontSize color:TradeLineColor];
     
 }
 
-- (void)drawString:(NSString *)str inReact:(CGRect)rect fontSize:(CGFloat)fontSize color:(UIColor*)color
-{
+- (void)drawString:(NSString *)str inReact:(CGRect)rect fontSize:(CGFloat)fontSize color:(UIColor*)color {
     NSMutableParagraphStyle *textStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
     textStyle.lineBreakMode = NSLineBreakByWordWrapping;
     textStyle.alignment = NSTextAlignmentLeft;
@@ -272,8 +246,7 @@
 }
 
 
-- (void)drawCircleWithColor:(UIColor*)color andSquareRect:(CGRect)rect
-{
+- (void)drawCircleWithColor:(UIColor*)color andSquareRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
     [color set];
     CGContextAddEllipseInRect(context, rect);
@@ -282,7 +255,7 @@
     
 }
 //画组合
--(void)drawZuHeLine:(CGRect)rect{
+- (void)drawZuHeLine:(CGRect)rect {
     UIBezierPath* aPath = [UIBezierPath bezierPath];
     
     // 3.设置一些修饰属性
@@ -293,7 +266,7 @@
     [color set];
     NSInteger count = self.dataArr.count;
     MCReturnRate *rate0 = _dataArr[0];
-
+    
     // Set the starting point of the shape.
     [aPath moveToPoint:CGPointMake(kLineBeginMarginLeft,  [self convertY:[self returnY:rate0.returnRate]])];
     for (int i = 0; i < count ; i++) {
@@ -307,7 +280,7 @@
     [aPath stroke]; // 4.渲染，完成绘制
 }
 //画沪深
--(void)drawHuShenLine:(CGRect)rect{
+- (void)drawHuShenLine:(CGRect)rect {
     UIBezierPath* aPath = [UIBezierPath bezierPath];
     // 3.设置一些修饰属性
     aPath.lineWidth = 1.0;
@@ -329,19 +302,17 @@
     
     MCReturnRate *rate = (MCReturnRate *)self.dataArr.lastObject;
     [self drawCircleWithColor:TradeLineHuShenColor andSquareRect:CGRectMake(kLineBeginMarginLeft + [self returnX:(int)count - 1 ] - 1.5,[self convertY: [self returnY:rate.refReturnRate]] - 2, 4, 4)];
-    
     [aPath stroke]; // 4.渲染，完成绘制
 }
 
 
 //
-- (void)getMaxAndMinValue
-{
+- (void)getMaxAndMinValue {
     //计算最大值
     self.maxValue = - LONG_MAX;
     self.minValue = LONG_MAX;
     
-    for(int i = 0;i < self.dataArr.count;i ++){
+    for(int i = 0;i < self.dataArr.count;i ++) {
         MCReturnRate *rate = self.dataArr[i];
         if (rate.returnRate > self.maxValue) {
             self.maxValue = rate.returnRate;
@@ -349,9 +320,8 @@
                 self.maxValue = rate.refReturnRate;
             }
             
-        }else if(rate.refReturnRate > self.maxValue){
+        } else if (rate.refReturnRate > self.maxValue) {
             self.maxValue = rate.refReturnRate;
-            
             if (rate.returnRate > self.maxValue) {
                 self.maxValue = rate.returnRate;
             }
@@ -362,19 +332,17 @@
             if (rate.refReturnRate < self.minValue) {
                 self.minValue = rate.refReturnRate;
             }
-        }else if(rate.refReturnRate < self.minValue){
+        } else if (rate.refReturnRate < self.minValue) {
             self.minValue = rate.refReturnRate;
             if (rate.returnRate < self.minValue) {
                 self.minValue = rate.returnRate;
             }
-            
         }
     }
-    
 }
 
 //设置参数
--(void)configureDrawFrameWithRect:(CGRect)rect{
+- (void)configureDrawFrameWithRect:(CGRect)rect {
     [self getMaxAndMinValue];
     self.unitValue = 1;
     self.yMaxFrame = kMarginTop;
@@ -411,23 +379,20 @@
     }
 }
 
-- (void)drawYAxisWithString:(NSString *)textString marginTop:(CGFloat)marginTop
-{
+- (void)drawYAxisWithString:(NSString *)textString marginTop:(CGFloat)marginTop {
     [self drawString:textString inReact:CGRectMake(1, marginTop, 40, 10)];
     [self drawCoordinateLinesBeginPoint:CGPointMake(kLineBeginMarginLeft, marginTop + 5) endPoint:CGPointMake(self.width - kLineEndMarginRight,  marginTop + 5)];
     
 }
 
-- (void)drawXAxisWithString:(NSString *)textString marginLeft:(CGFloat)marginLeft
-{
+- (void)drawXAxisWithString:(NSString *)textString marginLeft:(CGFloat)marginLeft {
     [self drawString:textString inReact:CGRectMake(marginLeft, self.frame.size.height - 10, 60, 20)];
     
 }
 
 
 
-- (void)drawCoodinateContext:(CGContextRef)context
-{
+- (void)drawCoodinateContext:(CGContextRef)context {
     //画0刻度线
     [self drawYAxisWithString:@"0.0" marginTop:self.yMaxFrame];
     
@@ -453,17 +418,16 @@
         }
     }
     //画y轴 负半轴
-    if (self.minValue<0)
-    {
-        int y_count=0;
-        if (self.minValue<0) {
-            y_count =[self yTotalCount:self.minValue];//格数
+    if (self.minValue < 0) {
+        int y_count = 0;
+        if (self.minValue < 0) {
+            y_count = [self yTotalCount:self.minValue];//格数
         }
         self.y_scale = scaleNumbery;
         for (int i = - y_count  ; i<0; i++) {
             float yscale = scaleNumbery * i;
             float value=i * self.unitValue;
-            NSString * y_strtext =[NSString stringWithFormat:@"%.1f%%",value];
+            NSString *y_strtext = [NSString stringWithFormat:@"%.1f%%",value];
             [self drawYAxisWithString:y_strtext marginTop:[self convertY:yscale]];
         }
     }
@@ -477,8 +441,7 @@
 }
 
 //绘制阴影
--(void)drawYingyinRect:(CGRect)rect withPoints:(NSArray*)arr index:(NSInteger)index
-{
+- (void)drawYingyinRect:(CGRect)rect withPoints:(NSArray*)arr index:(NSInteger)index {
     if  (!arr || [arr count]<=0) return;
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSaveGState(context);
@@ -537,7 +500,6 @@
             CGGradientRelease(gradient);
         }
         
-        
     }
     CGContextRestoreGState(context);
     
@@ -549,24 +511,24 @@
     [muleft insertString:@"." atIndex:muleft.length - 5];
     return muleft;
 }
--(float)convertY:(float)y{
+- (float)convertY:(float)y {
     return self.yMaxFrame - y;
 }
 //获取y轴的总格数 传入受益
--(int)yTotalCount:(float)moneyFlow{
+- (int)yTotalCount:(float)moneyFlow {
     
     return fabs(moneyFlow/self.unitValue);
 }
--(double)returnX:(int)i{
-    CGFloat xunit = (self.frame.size.width - kLineBeginMarginLeft - kLineEndMarginRight)/(self.dataArr.count - 1);
-    return  i*xunit;
+- (double)returnX:(int)i {
+    CGFloat xunit = (self.frame.size.width - kLineBeginMarginLeft - kLineEndMarginRight) / (self.dataArr.count - 1);
+    return  i * xunit;
 }
 
--(double)returnY:(float)value{
+- (double)returnY:(float)value {
     if (value>0) {
-        return value*self.yScale/self.unitValue;
+        return value*self.yScale / self.unitValue;
     }else if (value<0){
-        return value*self.y_scale/self.unitValue;
+        return value*self.y_scale / self.unitValue;
     }else{
         return 0;
     }

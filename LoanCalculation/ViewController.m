@@ -313,9 +313,7 @@
     [btn setTintColor:UIColorFromRGB(0x565568)];
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [btn setTitle:@"下一页" forState:UIControlStateNormal];
-
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
-    
     [btn addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn];
     

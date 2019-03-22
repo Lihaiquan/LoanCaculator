@@ -15,36 +15,28 @@
 
 @implementation AnimationContoller
 
-+ (instancetype)AnimationControllerWithOperation:(UINavigationControllerOperation)operation NavigationController:(UINavigationController *)navigationController
-{
++ (instancetype)AnimationControllerWithOperation:(UINavigationControllerOperation)operation NavigationController:(UINavigationController *)navigationController {
     AnimationContoller * ac = [[AnimationContoller alloc]init];
     ac.navigationController = navigationController;
     ac.navigationOperation = operation;
     return ac;
 }
-+ (instancetype)AnimationControllerWithOperation:(UINavigationControllerOperation)operation
-{
++ (instancetype)AnimationControllerWithOperation:(UINavigationControllerOperation)operation {
     AnimationContoller * ac = [[AnimationContoller alloc]init];
     ac.navigationOperation = operation;
     return ac;
 }
-- (NSMutableArray *)screenShotArray
-{
+- (NSMutableArray *)screenShotArray {
     if (_screenShotArray == nil) {
         _screenShotArray = [[NSMutableArray alloc]init];
     }
     return _screenShotArray;
 }
-- (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext
-{
+- (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext {
     return .35f;
 }
 
--(void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext
-{
-    
-
-    
+-(void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
     UIView *baseView = self.navigationController.tabBarController.view;
     if (!baseView) {
         baseView =  self.navigationController.view.window;

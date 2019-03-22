@@ -16,8 +16,7 @@
 
 #define KPointWidth 5
 
-@interface MCMarkLineView ()
-{
+@interface MCMarkLineView () {
     CGFloat oldMarkY;
     CGFloat _x;
     CGFloat _y1;
@@ -36,8 +35,7 @@
 
 @implementation MCMarkLineView
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         _markView = [[UIView alloc] initWithFrame:CGRectMake(6, 0, 110, 50)];
@@ -87,20 +85,17 @@
         _refReturnlabel.font = [UIFont systemFontOfSize:10];
         [_markView addSubview:_refReturnlabel];
         
-        
     }
     return self;
 }
 
 - (void)setTitleArr:(NSArray *)titleArr {
     _titleArr = titleArr;
-     _zTitileLabel.text = _titleArr[0];
+    _zTitileLabel.text = _titleArr[0];
     _hTitleLabel.text = _titleArr[1];
-    
 }
 
-- (void)setType:(MarkType)type
-{
+- (void)setType:(MarkType)type {
     _type = type;
     if (_type == SingleLine) {
         _markView.height = 42;
@@ -110,28 +105,23 @@
         _hTitleLabel.hidden = YES;
         _refReturnlabel.hidden = YES;
         _zTitileLabel.text = @"净值";
-    }else{
+    } else {
         _markView.height = 50;
-
     }
 }
 
-- (void)drawRect:(CGRect)rect
-{
+- (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
-    
- 
     [self drawCoordinateLinesBeginPoint:CGPointMake(_x, 16) endPoint:CGPointMake(_x, rect.size.height - 26)];
     
     CGContextRef context = UIGraphicsGetCurrentContext();
-
     //画圆点
     CGContextSetLineWidth(context, 1.0);
     CGContextSetStrokeColorWithColor(context,  [UIColor  whiteColor].CGColor);
     CGContextAddArc(context, _x, _y1, 4.5, 0, 2*M_PI, 0);
     CGContextDrawPath(context, kCGPathStroke);
     
-
+    
     //画圆点
     CGRect myOval = {_x - 4, _y1-4, 8, 8};
     CGContextSetFillColorWithColor(context, TradeLineZuHeColor.CGColor);
@@ -149,15 +139,11 @@
         CGContextSetFillColorWithColor(context, TradeLineHuShenColor.CGColor);
         CGContextAddEllipseInRect(context, myOval2);
         CGContextFillPath(context);
- 
+        
     }
-    
-  
-
 }
 
-- (void)drawCoordinateLinesBeginPoint:(CGPoint)bPoint endPoint:(CGPoint)ePoint
-{
+- (void)drawCoordinateLinesBeginPoint:(CGPoint)bPoint endPoint:(CGPoint)ePoint {
     CGContextRef currentContext = UIGraphicsGetCurrentContext();
     //设置虚线颜色
     CGContextSetStrokeColorWithColor(currentContext,  TradeLineZuHeColor.CGColor);
@@ -178,18 +164,17 @@
     
 }
 
-- (void)setReturnRate:(MCReturnRate *)returnRate
-{
+- (void)setReturnRate:(MCReturnRate *)returnRate {
     _returnRate = returnRate;
     if (_type == DoubleLine) {
         _datelabel.text = [NSString stringWithFormat:@"第%d月值",returnRate.date];
         if (_titleArr.count == 3) {
-             _datelabel.text = [NSString stringWithFormat:@"%d%@",returnRate.date,_titleArr[2]];
+            _datelabel.text = [NSString stringWithFormat:@"%d%@",returnRate.date,_titleArr[2]];
         }
         
         _returnRateLabel.text = [NSString stringWithFormat:@"%.2f",returnRate.returnRate ];
-
-    }else{
+        
+    } else {
         _datelabel.text = [NSString stringWithFormat:@"%@",returnRate.fundDate];
         _returnRateLabel.text = [NSString stringWithFormat:@"%.3f",returnRate.returnRate];
         
@@ -199,13 +184,11 @@
 }
 
 
-- (void)setX:(CGFloat)x withReturnY:(CGFloat)returnY refReturnY:(CGFloat)refReturnY
-{
+- (void)setX:(CGFloat)x withReturnY:(CGFloat)returnY refReturnY:(CGFloat)refReturnY {
     _x = x;
     _y1 = returnY;
     _y2 = refReturnY;
     [self setNeedsDisplay];
-    
     
     CGRect markFrame = _markView.frame;
     CGFloat markY = returnY + 10;
@@ -213,10 +196,10 @@
     if (fabs(oldMarkY - markY) > 10) {
         if (self.height - markY <  _markView.height) {
             markFrame.origin.y = markY - _markView.height ;
-
+            
         }else{
             markFrame.origin.y = markY;
-           
+            
         }
         _markView.frame = markFrame;
         oldMarkY = markY;
@@ -227,17 +210,16 @@
             _markView.left = _x - _markView.width - 6;
             
         }];
-    }else{
+    } else {
         [UIView animateWithDuration:0.25 animations:^{
             _markView.left =  _x +  6;
             
         }];
-        
     }
     
 }
 
--(NSString *)convertDate:(NSString *)date{
+- (NSString *)convertDate:(NSString *)date {
     NSMutableString *muleft=[NSMutableString stringWithFormat:@"%@",date];
     [muleft insertString:@"-" atIndex:muleft.length - 2];
     [muleft insertString:@"-" atIndex:muleft.length - 5];
@@ -247,11 +229,11 @@
 
 
 /*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
+ // Only override drawRect: if you perform custom drawing.
+ // An empty implementation adversely affects performance during animation.
+ - (void)drawRect:(CGRect)rect {
+ // Drawing code
+ }
+ */
 
 @end

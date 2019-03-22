@@ -22,7 +22,6 @@
 typedef enum {
     DoubleLine,
     SingleLine,
-    
 } MarkType;
 
 @class MCReturnRate;
@@ -31,6 +30,7 @@ typedef enum {
 @property (nonatomic,strong)MCReturnRate *returnRate;
 @property (nonatomic,assign)MarkType type;
 @property (nonatomic,strong)NSArray *titleArr;
+
 - (void)setX:(CGFloat)x withReturnY:(CGFloat)returnY refReturnY:(CGFloat)refReturnY;
 
 
