@@ -263,7 +263,7 @@
     CGFloat width = [UIScreen mainScreen].bounds.size.width/4.0;
     for (int i = 0; i < 4; i ++) {
         UIButton *button =  [UIButton buttonWithType:UIButtonTypeSystem];
-        button.frame = CGRectMake( width * i, 160, width, 24);
+        button.frame = CGRectMake( width * i, 220, width, 24);
         button.titleLabel.font = [UIFont systemFontOfSize:12];
         [button setTintColor:UIColorFromRGB(0x565568)];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -279,7 +279,7 @@
         [self.view addSubview:button];
     }
     
-    _first = [[MCCurveView alloc] initWithFrame:CGRectMake(15, 200, [UIScreen mainScreen].bounds.size.width - 30, 191)];
+    _first = [[MCCurveView alloc] initWithFrame:CGRectMake(15, 260, [UIScreen mainScreen].bounds.size.width - 30, 191)];
     _first.backgroundColor = [UIColor blackColor];
     [self.view addSubview:_first];
    
@@ -287,7 +287,7 @@
     NSArray *titles = @[@"累计还款",@"累计利息",@"累计本金"];
     for (int i = 0; i < 3; i ++) {
         UIButton *button =  [UIButton buttonWithType:UIButtonTypeSystem];
-        button.frame = CGRectMake( width * i, [UIScreen mainScreen].bounds.size.height - 200 - 15 - 35, width, 24);
+        button.frame = CGRectMake( width * i, CGRectGetMaxY(_first.frame) + 30, width, 24);
         button.titleLabel.font = [UIFont systemFontOfSize:12];
         [button setTintColor:UIColorFromRGB(0x565568)];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -302,13 +302,13 @@
         [button setTitle:titles[i] forState:UIControlStateNormal];
         [self.view addSubview:button];
     }
-    _second = [[MCCurveView alloc] initWithFrame:CGRectMake(15, [UIScreen mainScreen].bounds.size.height - 200 - 15 , [UIScreen mainScreen].bounds.size.width - 30,200)];
+    _second = [[MCCurveView alloc] initWithFrame:CGRectMake(15, CGRectGetMaxY(_first.frame) + 84 , [UIScreen mainScreen].bounds.size.width - 30,200)];
     _second.backgroundColor = [UIColor blackColor];
     [self.view addSubview:_second];
     
     
     UIButton *btn =  [UIButton buttonWithType:UIButtonTypeSystem];
-    btn.frame = CGRectMake( 0, 22, 60, 24);
+    btn.frame = CGRectMake( 0, 90, 60, 24);
     btn.titleLabel.font = [UIFont systemFontOfSize:18];
     [btn setTintColor:UIColorFromRGB(0x565568)];
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];

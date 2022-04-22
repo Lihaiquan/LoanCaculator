@@ -381,7 +381,7 @@
     width = [UIScreen mainScreen].bounds.size.width/3.0;
     for (int i = 0; i < 3; i ++) {
         UIButton *button =  [UIButton buttonWithType:UIButtonTypeSystem];
-        button.frame = CGRectMake( width * i, [UIScreen mainScreen].bounds.size.height - 200 - 15 - 35, width, 24);
+        button.frame = CGRectMake( width * i, CGRectGetMaxY(_fistCurveView.frame) + 30, width, 24);
         button.titleLabel.font = [UIFont systemFontOfSize:12];
         [button setTintColor:UIColorFromRGB(0x565568)];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -396,7 +396,7 @@
         [button setTitle:titles[i] forState:UIControlStateNormal];
         [self.view addSubview:button];
     }
-    _secondCurveView = [[MCCurveView alloc] initWithFrame:CGRectMake(15, [UIScreen mainScreen].bounds.size.height - 200 - 15 , [UIScreen mainScreen].bounds.size.width - 30,200)];
+    _secondCurveView = [[MCCurveView alloc] initWithFrame:CGRectMake(15, CGRectGetMaxY(_fistCurveView.frame) + 84 , [UIScreen mainScreen].bounds.size.width - 30,200)];
     _secondCurveView.backgroundColor = [UIColor blackColor];
     [self.view addSubview:_secondCurveView];
     
